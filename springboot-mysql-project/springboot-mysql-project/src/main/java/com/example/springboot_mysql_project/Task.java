@@ -1,5 +1,8 @@
 package com.example.springboot_mysql_project;
 
+/*
+* JPA entity that maps to a database table for storing task details with an auto-generated ID.
+*/
 import jakarta.persistence.*;
 
 @Entity
@@ -8,7 +11,6 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String description;
     private String status;
 
