@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: springboot-mysql-project
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/crud_demo
+    username: root
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: update
