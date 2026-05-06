@@ -5,9 +5,11 @@ package com.example.springboot_mysql_project;
 */
 import jakarta.persistence.*;
 
+// Notifies Spring that this class represents a table in the database
 @Entity
 public class Task {
 
+    // Primary key of the table
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
