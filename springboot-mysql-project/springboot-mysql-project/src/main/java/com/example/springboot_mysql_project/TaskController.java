@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+// lets Spring know that this class handles HTTP requests and returns JSON data
 @RestController
+// All the endpoints in this starts with /tasks
 @RequestMapping("/tasks")
 public class TaskController {
 
@@ -13,18 +15,21 @@ public class TaskController {
 
     // Get all the tasks available
     @GetMapping
+    // this will basically carry out SELECT * FROM task
     public List<Task> getAllTasks() {
         return taskRepo.findAll();
     }
 
     // Add a new task
     @PostMapping
+    // this will carry out INSERT INTO task
     public Task createTask(@RequestBody Task task) {
         return taskRepo.save(task);
     }
 
     // Modify an existing task
     @PutMapping("/{id}")
+    // this will carry out SELECT * FROM task WHERE id = smth
     public Task updateTask(@PathVariable Long id, @RequestBody Task updatedTask) {
         // Find a task in the database, throw an error if it doesn't exist
         Task existingTask = taskRepo.findById(id)
@@ -40,6 +45,7 @@ public class TaskController {
 
     // Remove a task
     @DeleteMapping("/{id}")
+    // this will carry out DELETE FROM task WHERE id = smth
     public void deleteTask(@PathVariable Long id) {
         taskRepo.deleteById(id);
     }
