@@ -1,5 +1,7 @@
-package com.example.springboot_mysql_project;
+package com.example.springboot_mysql_project.controllers;
 
+import com.example.springboot_mysql_project.entities.Task;
+import com.example.springboot_mysql_project.repos.TaskRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.example.springboot_mysql_project;
+package com.example.springboot_mysql_project.entities;
 
 /*
 * JPA entity that maps to a database table for storing task details with an auto-generated ID.
