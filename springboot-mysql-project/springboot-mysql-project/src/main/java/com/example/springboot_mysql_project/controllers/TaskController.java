@@ -1,7 +1,7 @@
 package com.example.springboot_mysql_project.controllers;
 
 import com.example.springboot_mysql_project.entities.Task;
-import com.example.springboot_mysql_project.repos.TaskRepo;
+import com.example.springboot_mysql_project.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -13,42 +13,34 @@ import java.util.List;
 public class TaskController {
 
     @Autowired
-    private TaskRepo taskRepo;
+    private TaskService taskService;
 
     // Get all the tasks available
     @GetMapping
     // this will basically carry out SELECT * FROM task
     public List<Task> getAllTasks() {
-        return taskRepo.findAll();
+        return taskService.getAllTasks();
     }
 
     // Add a new task
     @PostMapping
     // this will carry out INSERT INTO task
     public Task createTask(@RequestBody Task task) {
-        return taskRepo.save(task);
+        return taskService.createTask(task);
     }
 
     // Modify an existing task
     @PutMapping("/{id}")
     // this will carry out SELECT * FROM task WHERE id = smth
     public Task updateTask(@PathVariable Long id, @RequestBody Task updatedTask) {
-        // Find a task in the database, throw an error if it doesn't exist
-        Task existingTask = taskRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
-
-        //Update the Java object with the new values
-        existingTask.setDescription(updatedTask.getDescription());
-        existingTask.setStatus(updatedTask.getStatus());
-
-        // Save it back to the database
-        return taskRepo.save(existingTask);
+        return taskService.updateTask(id, updatedTask);
     }
 
     // Remove a task
     @DeleteMapping("/{id}")
     // this will carry out DELETE FROM task WHERE id = smth
-    public void deleteTask(@PathVariable Long id) {
-        taskRepo.deleteById(id);
+    public String deleteTask(@PathVariable Long id) {
+        taskService.deleteTask(id);
+        return "Task deleted successfully";
     }
 }
