@@ -11,7 +11,7 @@ import java.util.List;
 
 // lets Spring know that this class handles HTTP requests and returns JSON data
 @RestController
-// All the endpoints in this starts with /tasks
+// All the endpoints in here starts with /tasks
 
 @RequestMapping("/tasks")
 @Tag(name = "Task Management", description = "Operations related to managing tasks in the CRUD application")
@@ -20,36 +20,36 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
+    // GET ALL TASKS
     @Operation(summary = "Get all tasks")
     @ApiResponse(responseCode = "200 OK", description = "Fetches all the tasks within the database")
-    // Get all the tasks available
     @GetMapping
     // this will basically carry out SELECT * FROM task
     public List<Task> getAllTasks() {
         return taskService.getAllTasks();
     }
 
+    // CREATE A NEW TASK
     @Operation(summary = "Create a new task")
     @ApiResponse(responseCode = "201", description = "Task successfully created")
-    // Add a new task
     @PostMapping
     // this will carry out INSERT INTO task
     public Task createTask(@RequestBody Task task) {
         return taskService.createTask(task);
     }
 
+    // MODIFYING AN EXISTING TASK
     @Operation(summary = "Update an existing task")
     @ApiResponse(responseCode = "200 OK", description = "Task updated successfully")
-    // Modify an existing task
     @PutMapping("/{id}")
     // this will carry out SELECT * FROM task WHERE id = smth
     public Task updateTask(@PathVariable Long id, @RequestBody Task updatedTask) {
         return taskService.updateTask(id, updatedTask);
     }
 
+    // DELETE A TASK
     @Operation(summary = "Delete an existing task")
     @ApiResponse(responseCode = "200 OK", description = "Task deleted successfully")
-    // Remove a task
     @DeleteMapping("/{id}")
     // this will carry out DELETE FROM task WHERE id = smth
     public String deleteTask(@PathVariable Long id) {
