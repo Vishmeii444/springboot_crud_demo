@@ -2,6 +2,7 @@ package com.example.springboot_mysql_project.controllers;
 
 import com.example.springboot_mysql_project.entities.Task;
 import com.example.springboot_mysql_project.services.TaskService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 // lets Spring know that this class handles HTTP requests and returns JSON data
 @RestController
 // All the endpoints in this starts with /tasks
+
 @RequestMapping("/tasks")
 public class TaskController {
 
