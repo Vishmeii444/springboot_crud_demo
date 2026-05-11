@@ -20,7 +20,8 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
-    @Operation(summary = "Get all tasks", description = "Fetches all the tasks within the database")
+    @Operation(summary = "Get all tasks")
+    @ApiResponse(responseCode = "200 OK", description = "Fetches all the tasks within the database")
     // Get all the tasks available
     @GetMapping
     // this will basically carry out SELECT * FROM task
@@ -38,6 +39,7 @@ public class TaskController {
     }
 
     @Operation(summary = "Update an existing task")
+    @ApiResponse(responseCode = "200 OK", description = "Task updated successfully")
     // Modify an existing task
     @PutMapping("/{id}")
     // this will carry out SELECT * FROM task WHERE id = smth
@@ -46,6 +48,7 @@ public class TaskController {
     }
 
     @Operation(summary = "Delete an existing task")
+    @ApiResponse(responseCode = "200 OK", description = "Task deleted successfully")
     // Remove a task
     @DeleteMapping("/{id}")
     // this will carry out DELETE FROM task WHERE id = smth
