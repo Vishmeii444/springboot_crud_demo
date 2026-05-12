@@ -1,5 +1,6 @@
 package com.example.springboot_mysql_project;
 
+import com.example.springboot_mysql_project.dto.TaskDTO;
 import com.example.springboot_mysql_project.entities.Task;
 import com.example.springboot_mysql_project.repos.TaskRepo;
 import com.example.springboot_mysql_project.services.TaskService;
@@ -7,9 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.modelmapper.ModelMapper;
 import org.mockito.junit.jupiter.MockitoExtension;
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -20,32 +20,24 @@ public class UpdateTaskTest {
     @Mock
     private TaskRepo taskRepo;
 
+    @Mock
+    private ModelMapper modelMapper;
+
     @InjectMocks
     private TaskService taskService;
 
     @Test
     public void testUpdateTask() {
-        // create an existing task and the updated data
-        Task existingTask = new Task();
-        existingTask.setId(1L);
-        existingTask.setDescription("Old Description");
-        existingTask.setStatus("Ongoing");
+        TaskDTO updateDTO = new TaskDTO(1L, "New Description", "Complete");
+        Task mappedTask = new Task();
+        mappedTask.setId(1L);
 
-        Task updatedDetails = new Task();
-        updatedDetails.setDescription("New Description");
-        updatedDetails.setStatus("Complete");
+        when(modelMapper.map(any(TaskDTO.class), eq(Task.class))).thenReturn(mappedTask);
+        when(taskRepo.save(any(Task.class))).thenReturn(mappedTask);
 
-        // findById returns the old task, save returns the result
-        when(taskRepo.findById(1L)).thenReturn(Optional.of(existingTask));
-        when(taskRepo.save(any(Task.class))).thenReturn(existingTask);
+        TaskDTO result = taskService.updateTask(updateDTO);
 
-        // call the service method
-        Task result = taskService.updateTask(1L, updatedDetails);
-
-        // check if the fields were changed correctly
         assertEquals("New Description", result.getDescription());
-        assertEquals("Complete", result.getStatus());
-
-        verify(taskRepo, times(1)).save(existingTask);
+        verify(taskRepo, times(1)).save(mappedTask);
     }
 }

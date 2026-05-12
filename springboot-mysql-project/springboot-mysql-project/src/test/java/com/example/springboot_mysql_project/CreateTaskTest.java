@@ -1,5 +1,6 @@
 package com.example.springboot_mysql_project;
 
+import com.example.springboot_mysql_project.dto.TaskDTO;
 import com.example.springboot_mysql_project.entities.Task;
 import com.example.springboot_mysql_project.repos.TaskRepo;
 import com.example.springboot_mysql_project.services.TaskService;
@@ -7,10 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.modelmapper.ModelMapper;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -21,33 +21,27 @@ public class CreateTaskTest {
     @Mock
     private TaskRepo taskRepo;
 
+    @Mock
+    private ModelMapper modelMapper;
+
     // add fake repo into real service
     @InjectMocks
     private TaskService taskService;
 
     @Test
     public void testCreateTask() {
+        TaskDTO inputDTO = new TaskDTO(null, "Learn Mockito", "Ongoing");
+        Task mappedTask = new Task();
+        mappedTask.setDescription("Learn Mockito");
 
-        // creeate the new task
-        Task inputTask = new Task();
-        inputTask.setDescription("Learn Mockito");
-        inputTask.setStatus("Ongoing");
+        // Mock mapping DTO to Entity
+        when(modelMapper.map(any(TaskDTO.class), eq(Task.class))).thenReturn(mappedTask);
+        // Mock saving the entity
+        when(taskRepo.save(any(Task.class))).thenReturn(mappedTask);
 
-        // save the new task
-        Task savedTask = new Task();
-        savedTask.setId(101L);
-        savedTask.setDescription("Learn Mockito");
-        savedTask.setStatus("Ongoing");
+        TaskDTO result = taskService.createTask(inputDTO);
 
-        // this will basically return the saved task that's manually created above
-        when(taskRepo.save(any(Task.class))).thenReturn(savedTask);
-
-        Task result = taskService.createTask(inputTask);
-
-        assertNotNull(result.getId());
-        assertEquals(101L, result.getId());
         assertEquals("Learn Mockito", result.getDescription());
-
         verify(taskRepo, times(1)).save(any(Task.class));
     }
 }

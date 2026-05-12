@@ -1,5 +1,6 @@
 package com.example.springboot_mysql_project.controllers;
 
+import com.example.springboot_mysql_project.dto.TaskDTO;
 import com.example.springboot_mysql_project.entities.Task;
 import com.example.springboot_mysql_project.services.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,8 +13,8 @@ import java.util.List;
 // lets Spring know that this class handles HTTP requests and returns JSON data
 @RestController
 // All the endpoints in here starts with /tasks
-
 @RequestMapping("/tasks")
+@CrossOrigin
 @Tag(name = "Task Management", description = "Operations related to managing tasks in the CRUD application")
 public class TaskController {
 
@@ -25,7 +26,7 @@ public class TaskController {
     @ApiResponse(responseCode = "200 OK", description = "Fetches all the tasks within the database")
     @GetMapping
     // this will basically carry out SELECT * FROM task
-    public List<Task> getAllTasks() {
+    public List<TaskDTO> getAllTasks() {
         return taskService.getAllTasks();
     }
 
@@ -34,17 +35,16 @@ public class TaskController {
     @ApiResponse(responseCode = "201", description = "Task successfully created")
     @PostMapping
     // this will carry out INSERT INTO task
-    public Task createTask(@RequestBody Task task) {
-        return taskService.createTask(task);
+    public TaskDTO createTask(@RequestBody TaskDTO taskDTO) {
+        return taskService.createTask(taskDTO);
     }
-
     // MODIFYING AN EXISTING TASK
     @Operation(summary = "Update an existing task")
     @ApiResponse(responseCode = "200 OK", description = "Task updated successfully")
     @PutMapping("/{id}")
     // this will carry out SELECT * FROM task WHERE id = smth
-    public Task updateTask(@PathVariable Long id, @RequestBody Task updatedTask) {
-        return taskService.updateTask(id, updatedTask);
+    public TaskDTO updateTask(@RequestBody TaskDTO taskDTO) {
+        return taskService.updateTask(taskDTO);
     }
 
     // DELETE A TASK
@@ -52,8 +52,7 @@ public class TaskController {
     @ApiResponse(responseCode = "200 OK", description = "Task deleted successfully")
     @DeleteMapping("/{id}")
     // this will carry out DELETE FROM task WHERE id = smth
-    public String deleteTask(@PathVariable Long id) {
-        taskService.deleteTask(id);
-        return "Task deleted successfully";
+    public String deleteTask(@RequestBody TaskDTO taskDTO) {
+        return taskService.deleteTask(taskDTO);
     }
 }
