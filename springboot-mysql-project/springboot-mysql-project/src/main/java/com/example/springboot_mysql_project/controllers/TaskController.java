@@ -1,6 +1,7 @@
 package com.example.springboot_mysql_project.controllers;
 
 import com.example.springboot_mysql_project.dto.TaskDTO;
+import com.example.springboot_mysql_project.dto.TaskResponseDTO;
 import com.example.springboot_mysql_project.entities.Task;
 import com.example.springboot_mysql_project.services.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +27,7 @@ public class TaskController {
     @ApiResponse(responseCode = "200 OK", description = "Fetches all the tasks within the database")
     @GetMapping
     // this will basically carry out SELECT * FROM task
-    public List<TaskDTO> getAllTasks() {
+    public List<TaskResponseDTO> getAllTasks() {
         return taskService.getAllTasks();
     }
 
@@ -35,7 +36,7 @@ public class TaskController {
     @ApiResponse(responseCode = "201", description = "Task successfully created")
     @PostMapping
     // this will carry out INSERT INTO task
-    public TaskDTO createTask(@RequestBody TaskDTO taskDTO) {
+    public TaskResponseDTO createTask(@RequestBody TaskDTO taskDTO) {
         return taskService.createTask(taskDTO);
     }
     // MODIFYING AN EXISTING TASK
@@ -43,7 +44,7 @@ public class TaskController {
     @ApiResponse(responseCode = "200 OK", description = "Task updated successfully")
     @PutMapping("/{id}")
     // this will carry out SELECT * FROM task WHERE id = smth
-    public TaskDTO updateTask(@RequestBody TaskDTO taskDTO) {
+    public TaskResponseDTO updateTask(@RequestBody TaskDTO taskDTO) {
         return taskService.updateTask(taskDTO);
     }
 

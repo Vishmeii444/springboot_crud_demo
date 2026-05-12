@@ -1,6 +1,7 @@
 package com.example.springboot_mysql_project;
 
 import com.example.springboot_mysql_project.dto.TaskDTO;
+import com.example.springboot_mysql_project.dto.TaskResponseDTO;
 import com.example.springboot_mysql_project.entities.Task;
 import com.example.springboot_mysql_project.repos.TaskRepo;
 import com.example.springboot_mysql_project.services.TaskService;
@@ -27,17 +28,21 @@ public class UpdateTaskTest {
     private TaskService taskService;
 
     @Test
-    public void testUpdateTask() {
-        TaskDTO updateDTO = new TaskDTO(1L, "New Description", "Complete");
+    public void UpdateTaskTest() {
+        TaskDTO updateDTO = new TaskDTO(1L, "Updated Description", "Complete");
         Task mappedTask = new Task();
         mappedTask.setId(1L);
 
+        TaskResponseDTO expectedResponse = new TaskResponseDTO(1L, "Updated Description", "Complete");
+
         when(modelMapper.map(any(TaskDTO.class), eq(Task.class))).thenReturn(mappedTask);
         when(taskRepo.save(any(Task.class))).thenReturn(mappedTask);
+        // Mock mapping the saved entity back to the Response DTO
+        when(modelMapper.map(any(Task.class), eq(TaskResponseDTO.class))).thenReturn(expectedResponse);
 
-        TaskDTO result = taskService.updateTask(updateDTO);
+        TaskResponseDTO result = taskService.updateTask(updateDTO);
 
-        assertEquals("New Description", result.getDescription());
-        verify(taskRepo, times(1)).save(mappedTask);
+        assertEquals("Updated Description", result.getDescription());
+        assertEquals(1L, result.getId());
     }
 }

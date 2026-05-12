@@ -37,6 +37,6 @@ public class DeleteTaskTest {
         String result = taskService.deleteTask(deleteDTO);
 
         assertEquals("Task deleted successfully", result);
-        verify(taskRepo, times(1)).delete(mappedTask);
+        verify(taskRepo, times(1)).delete(mappedTask); // Verifies the correct entity was deleted
     }
 }

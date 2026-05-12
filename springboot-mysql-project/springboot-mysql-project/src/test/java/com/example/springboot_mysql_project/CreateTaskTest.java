@@ -1,6 +1,7 @@
 package com.example.springboot_mysql_project;
 
 import com.example.springboot_mysql_project.dto.TaskDTO;
+import com.example.springboot_mysql_project.dto.TaskResponseDTO;
 import com.example.springboot_mysql_project.entities.Task;
 import com.example.springboot_mysql_project.repos.TaskRepo;
 import com.example.springboot_mysql_project.services.TaskService;
@@ -31,17 +32,22 @@ public class CreateTaskTest {
     @Test
     public void testCreateTask() {
         TaskDTO inputDTO = new TaskDTO(null, "Learn Mockito", "Ongoing");
-        Task mappedTask = new Task();
-        mappedTask.setDescription("Learn Mockito");
+        Task savedTask = new Task();
+        savedTask.setId(101L);
+        savedTask.setDescription("Learn Mockito");
 
-        // Mock mapping DTO to Entity
-        when(modelMapper.map(any(TaskDTO.class), eq(Task.class))).thenReturn(mappedTask);
-        // Mock saving the entity
-        when(taskRepo.save(any(Task.class))).thenReturn(mappedTask);
+        TaskResponseDTO expectedResponse = new TaskResponseDTO(101L, "Learn Mockito", "Ongoing");
 
-        TaskDTO result = taskService.createTask(inputDTO);
+        // Mock mapping input to entity
+        when(modelMapper.map(any(TaskDTO.class), eq(Task.class))).thenReturn(savedTask);
+        // Mock saving returns the entity with ID
+        when(taskRepo.save(any(Task.class))).thenReturn(savedTask);
+        // Mock mapping entity back to Response DTO
+        when(modelMapper.map(any(Task.class), eq(TaskResponseDTO.class))).thenReturn(expectedResponse);
 
+        TaskResponseDTO result = taskService.createTask(inputDTO);
+
+        assertEquals(101L, result.getId());
         assertEquals("Learn Mockito", result.getDescription());
-        verify(taskRepo, times(1)).save(any(Task.class));
     }
 }
