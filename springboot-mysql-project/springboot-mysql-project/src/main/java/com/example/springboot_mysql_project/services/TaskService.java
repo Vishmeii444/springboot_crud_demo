@@ -15,6 +15,7 @@ import java.util.List;
 @Service
 @Transactional
 public class TaskService {
+
     @Autowired
     private TaskRepo taskRepo;
 
@@ -23,22 +24,23 @@ public class TaskService {
 
     public List<TaskResponseDTO> getAllTasks() {
         List<Task> taskList = taskRepo.findAll();
-        // Converts the List of Entities to a List of DTOs
         return modelMapper.map(taskList, new TypeToken<List<TaskResponseDTO>>() {}.getType());
     }
 
     public TaskResponseDTO createTask(TaskDTO taskDTO) {
-        // Map DTO to Entity to save it
         Task task = modelMapper.map(taskDTO, Task.class);
         Task savedTask = taskRepo.save(task);
         return modelMapper.map(savedTask, TaskResponseDTO.class);
     }
 
-    public TaskDTO updateTask(TaskDTO taskDTO) {
+    public TaskResponseDTO updateTask(TaskDTO taskDTO) {
         if (taskRepo.existsById(taskDTO.getId())) {
+            // Map DTO to Entity
             Task task = modelMapper.map(taskDTO, Task.class);
-            taskRepo.save(task);
-            return taskDTO;
+            // Save Entity
+            Task savedTask = taskRepo.save(task);
+            // Map saved Entity back to ResponseDTO
+            return modelMapper.map(savedTask, TaskResponseDTO.class);
         } else {
             return null;
         }

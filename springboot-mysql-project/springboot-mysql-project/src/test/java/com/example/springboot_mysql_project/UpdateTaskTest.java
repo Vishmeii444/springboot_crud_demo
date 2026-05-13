@@ -11,8 +11,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.modelmapper.ModelMapper;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,20 +31,28 @@ public class UpdateTaskTest {
 
     @Test
     public void UpdateTaskTest() {
+        // Arrange
         TaskDTO updateDTO = new TaskDTO(1L, "Updated Description", "Complete");
         Task mappedTask = new Task();
         mappedTask.setId(1L);
 
         TaskResponseDTO expectedResponse = new TaskResponseDTO(1L, "Updated Description", "Complete");
 
+        // Required mock for the service's existence check
+        when(taskRepo.existsById(1L)).thenReturn(true);
+
         when(modelMapper.map(any(TaskDTO.class), eq(Task.class))).thenReturn(mappedTask);
         when(taskRepo.save(any(Task.class))).thenReturn(mappedTask);
+
         // Mock mapping the saved entity back to the Response DTO
         when(modelMapper.map(any(Task.class), eq(TaskResponseDTO.class))).thenReturn(expectedResponse);
 
+        // Act
         TaskResponseDTO result = taskService.updateTask(updateDTO);
 
+        // Assert
         assertEquals("Updated Description", result.getDescription());
         assertEquals(1L, result.getId());
+        verify(taskRepo, times(1)).save(any(Task.class));
     }
 }

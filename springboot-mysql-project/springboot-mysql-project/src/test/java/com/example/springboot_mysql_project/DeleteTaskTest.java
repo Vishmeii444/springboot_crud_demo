@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.modelmapper.ModelMapper;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -29,14 +30,13 @@ public class DeleteTaskTest {
     @Test
     public void testDeleteTask() {
         TaskDTO deleteDTO = new TaskDTO(1L, "Test Task", "Done");
-        Task mappedTask = new Task();
-        mappedTask.setId(1L);
 
-        when(modelMapper.map(any(TaskDTO.class), eq(Task.class))).thenReturn(mappedTask);
+        when(taskRepo.existsById(1L)).thenReturn(true);
 
-        String result = taskService.deleteTask(deleteDTO);
+        String result = taskService.deleteTask(deleteDTO.getId());
 
         assertEquals("Task deleted successfully", result);
-        verify(taskRepo, times(1)).delete(mappedTask); // Verifies the correct entity was deleted
+
+        verify(taskRepo, times(1)).deleteById(1L);
     }
 }
