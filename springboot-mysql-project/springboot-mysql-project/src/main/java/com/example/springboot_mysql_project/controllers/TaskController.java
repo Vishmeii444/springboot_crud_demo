@@ -44,7 +44,8 @@ public class TaskController {
     @ApiResponse(responseCode = "200 OK", description = "Task updated successfully")
     @PutMapping("/{id}")
     // this will carry out SELECT * FROM task WHERE id = smth
-    public TaskResponseDTO updateTask(@RequestBody TaskDTO taskDTO) {
+    public TaskResponseDTO updateTask(@PathVariable Long id, @RequestBody TaskDTO taskDTO) {
+        taskDTO.setId(id);
         return taskService.updateTask(taskDTO);
     }
 
@@ -53,7 +54,7 @@ public class TaskController {
     @ApiResponse(responseCode = "200 OK", description = "Task deleted successfully")
     @DeleteMapping("/{id}")
     // this will carry out DELETE FROM task WHERE id = smth
-    public String deleteTask(@RequestBody TaskDTO taskDTO) {
-        return taskService.deleteTask(taskDTO);
+    public String deleteTask(@PathVariable Long id) {
+        return taskService.deleteTask(id);
     }
 }

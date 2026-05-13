@@ -34,14 +34,21 @@ public class TaskService {
         return modelMapper.map(savedTask, TaskResponseDTO.class);
     }
 
-    public TaskResponseDTO updateTask(TaskDTO taskDTO) {
-        Task task = modelMapper.map(taskDTO, Task.class);
-        Task updatedTask = taskRepo.save(task);
-        return modelMapper.map(updatedTask, TaskResponseDTO.class);
+    public TaskDTO updateTask(TaskDTO taskDTO) {
+        if (taskRepo.existsById(taskDTO.getId())) {
+            Task task = modelMapper.map(taskDTO, Task.class);
+            taskRepo.save(task);
+            return taskDTO;
+        } else {
+            return null;
+        }
     }
 
-    public String deleteTask(TaskDTO taskDTO) {
-        taskRepo.delete(modelMapper.map(taskDTO, Task.class));
-        return "Task deleted successfully";
+    public String deleteTask(Long id) {
+        if (taskRepo.existsById(id)) {
+            taskRepo.deleteById(id);
+            return "Task deleted successfully";
+        }
+        return "Task not found";
     }
 }
